@@ -1,0 +1,451 @@
+
+<html>
+	<head>
+		<title>Killer Game 2017</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" /> 
+		<link href="/style.css?renew=true" rel="stylesheet" type="text/css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?renew=true" />
+        <link rel="icon" type="image/png" href="/favicon/favicon-32x32.png?renew=true" sizes="32x32" />
+        <link rel="icon" type="image/png" href="/favicon/favicon-16x16.png?renew=true" sizes="16x16" />
+        <link rel="manifest" href="/favicon/manifest.json?renew=true" />
+        <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?renew=true" color="#e00000" />
+        <link rel="shortcut icon" href="/favicon/favicon.ico?renew=true" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-TileImage" content="/favicon/mstile-144x144.png?renew=true" />
+        <meta name="msapplication-config" content="/favicon/browserconfig.xml?renew=true" />
+        <meta name="theme-color" content="#000000" />
+	</head>
+	<body>
+		<script>
+			function isbase64(code)
+			{
+				if ((code.length % 4) != 0) return false;
+				
+				for (var i = 0; i < code.length; i++)
+				{
+					if ((code.charAt(i) >= 'A') && (code.charAt(i) <= 'Z')) continue;
+					if ((code.charAt(i) >= 'a') && (code.charAt(i) <= 'z')) continue;
+					if ((code.charAt(i) >= '0') && (code.charAt(i) <= '9')) continue;
+					if (code.charAt(i) == '+') continue;
+					if (code.charAt(i) == '/') continue;
+					if ((code.charAt(i) == '=') && ((i + 1) == code.length)) continue;
+					if ((code.charAt(i) == '=') && (code.charAt(i + 1) == '=') && ((i + 2) == code.length)) continue;
+					return false;
+				}
+				return true;
+			}
+		</script>
+		<div id="side_space">
+							<script>
+					function login_click()
+					{
+						window.location.href = '/killergame/login';
+					}
+					
+					function kill_click()
+					{
+						var code = prompt("Insert killcode here:");
+						
+						if (code === null) return;
+						
+						var xhr = new XMLHttpRequest();
+						
+						xhr.open('POST', '/killergame', true);
+						xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+						
+						xhr.onload = function () {
+							if(this.readyState == 4 && this.status == 200)
+							{
+								if (this.responseText.substr(0, 6) == 'killed')
+								{
+									alert("You killed " + this.responseText.substr(7));
+									window.location.replace(window.location.pathname + window.location.search + window.location.hash);
+								}
+								else
+								{
+									var msg;
+									alert("Invalid kill code!");
+								}
+							}
+						};
+						xhr.send('killcode=' + encodeURIComponent(code));
+					}
+                    
+                    function about_click()
+                    {
+                    	window.location.href = '/killergame/about';
+                    }
+                    
+                    function mypage_click()
+                    {
+                        window.location.href = '/kguserloginpage.php?target=' + encodeURIComponent('https://binarystore.altervista.org/kgprofile.php');
+                    }
+                    
+                    function close_click()
+                    {
+                        var xhr = new XMLHttpRequest();
+						xhr.open('POST', '/kglogin.php', true);
+						xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+						xhr.onload = function () {
+							if(this.readyState == 4 && this.status == 200)
+							{
+								window.location.replace(window.location.pathname + window.location.search + window.location.hash);
+							}
+						};
+						xhr.send('action=close');
+                    }
+				</script>
+				<button id="login" onclick="login_click();">Log in</button>
+				<button id="kill" onclick="kill_click();">Kill target</button>
+				<button id="mypage" onclick="mypage_click();">My page</button>
+                				<button id="about" onclick="about_click();">About "Killer Game"</button>
+					</div><br />
+        <div id="info_space">
+        	<marquee scrollamount="9"><font color="cyan">Versione 1.3.0 (b): Stiamo lavorando per voi! Consultate la sezione <a href="/kgabout.php">Informazioni su "Killer Game"</a> per le novit&agrave;.</font></marquee><br /><marquee scrollamount="5"><font color="white">Still alive: 2 of 84.</font>&emsp;&emsp;&emsp;&emsp;&emsp;Best alive:  ( kills).&emsp;&emsp;&emsp;&emsp;&emsp;<font color="red">Best dead: Dario Fiorenza (10 kills).</font>&emsp;&emsp;&emsp;&emsp;&emsp;</marquee>        </div>
+		<div id="body_space">
+			<table id="main_table">
+			<tr class="title">
+								<td>Player</td>
+				<td>Kills</td>
+				<td>Status</td>
+							</tr>
+			<tr class="zombie">
+										<td>Agnese Janigro</td>
+					<td>2 kills</td>
+					<td>Inactive since 07-04-2017</td>
+                    				</tr><tr class="dead">
+										<td>Alessandra Massimi Ale</td>
+					<td>0 kills</td>
+					<td>Killed by Damiano De Prosperis</td>
+                    				</tr><tr class="dead">
+										<td>Alessandro Coletta</td>
+					<td>0 kills</td>
+					<td>Killed by Martina Rossoni</td>
+                    				</tr><tr class="dead">
+										<td>Alessandro Danesin</td>
+					<td>0 kills</td>
+					<td>Killed by Nicoletta Capotorto</td>
+                    				</tr><tr class="dead">
+										<td>Alessandro Rezzesi</td>
+					<td>2 kills</td>
+					<td>Killed by Daniele Avino</td>
+                    				</tr><tr class="dead">
+										<td>Alessio Cela</td>
+					<td>1 kill</td>
+					<td>Killed by Carlo Farneti</td>
+                    				</tr><tr class="dead">
+										<td>Alessio Colasanti</td>
+					<td>0 kills</td>
+					<td>Killed by Giulia Giu</td>
+                    				</tr><tr class="dead">
+										<td>Alessio Guidi</td>
+					<td>0 kills</td>
+					<td>Killed by Federico Palmulli</td>
+                    				</tr><tr class="dead">
+										<td>Andrea Borghesi</td>
+					<td>1 kill</td>
+					<td>Killed by Carlo Farneti</td>
+                    				</tr><tr class="dead">
+										<td>Andrea Colella</td>
+					<td>3 kills</td>
+					<td>Killed by Ivano Di Gioia</td>
+                    				</tr><tr class="dead">
+										<td>Andrea Mazzocco</td>
+					<td>0 kills</td>
+					<td>Killed by Nicole Tomas</td>
+                    				</tr><tr class="dead">
+										<td>Andrea Proietto</td>
+					<td>0 kills</td>
+					<td>Killed by Andrea Colella</td>
+                    				</tr><tr class="dead">
+										<td>Angelo Zanni</td>
+					<td>1 kill</td>
+					<td>Killed by Daniele Avino</td>
+                    				</tr><tr class="dead">
+										<td>Arianna De Santo</td>
+					<td>0 kills</td>
+					<td>Killed by Damiano De Prosperis</td>
+                    				</tr><tr class="dead">
+										<td>Arianna Parente</td>
+					<td>0 kills</td>
+					<td>Killed by Elio Campanile</td>
+                    				</tr><tr class="dead">
+										<td>Carlo Farneti</td>
+					<td>6 kills</td>
+					<td>Killed by Damiano De Prosperis</td>
+                    				</tr><tr class="dead">
+										<td>Chiara Graziani</td>
+					<td>0 kills</td>
+					<td>Killed by Andrea Colella</td>
+                    				</tr><tr class="dead">
+										<td>Claudia Bruni</td>
+					<td>1 kill</td>
+					<td>Killed by Alessio Cela</td>
+                    				</tr><tr class="dead">
+										<td>Damiano De Prosperis</td>
+					<td>6 kills</td>
+					<td>Killed by Elio Campanile</td>
+                    				</tr><tr class="zombie">
+										<td>Daniele Avino</td>
+					<td>7 kills</td>
+					<td>Inactive since 06-04-2017</td>
+                    				</tr><tr class="dead">
+										<td>Dario Fiorenza</td>
+					<td>10 kills</td>
+					<td>Killed by Ivano Di Gioia</td>
+                    				</tr><tr class="dead">
+										<td>David Morselli</td>
+					<td>0 kills</td>
+					<td>Killed by Damiano De Prosperis</td>
+                    				</tr><tr class="dead">
+										<td>Davide Kazazi</td>
+					<td>0 kills</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Delia Pallotta</td>
+					<td>1 kill</td>
+					<td>Killed by Damiano De Prosperis</td>
+                    				</tr><tr class="dead">
+										<td>Elena D. Micheli</td>
+					<td>0 kills</td>
+					<td>Killed by Lorenzo Danella</td>
+                    				</tr><tr class="dead">
+										<td>Elio Campanile</td>
+					<td>5 kills</td>
+					<td>Killed by Ivano Di Gioia</td>
+                    				</tr><tr class="dead">
+										<td>Elisa Conforte</td>
+					<td>0 kills</td>
+					<td>Killed by Francesco Paletta</td>
+                    				</tr><tr class="dead">
+										<td>Elisa Scanu</td>
+					<td>0 kills</td>
+					<td>Killed by Michele Spina</td>
+                    				</tr><tr class="dead">
+										<td>Emanuele De Feo</td>
+					<td>1 kill</td>
+					<td>Killed by Daniele Avino</td>
+                    				</tr><tr class="dead">
+										<td>Fabio Calabrese</td>
+					<td>2 kills</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Fausto Colantoni</td>
+					<td>0 kills</td>
+					<td>Killed by Delia Pallotta</td>
+                    				</tr><tr class="dead">
+										<td>Federica Iacovissi</td>
+					<td>1 kill</td>
+					<td>Killed by Carlo Farneti</td>
+                    				</tr><tr class="dead">
+										<td>Federico Palmulli</td>
+					<td>1 kill</td>
+					<td>Killed by Martina Rossoni</td>
+                    				</tr><tr class="dead">
+										<td>Flaminia Loreni</td>
+					<td>0 kills</td>
+					<td>Killed by Nicole Tomas</td>
+                    				</tr><tr class="dead">
+										<td>Francesca Loparco</td>
+					<td>0 kills</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Francesca Pallicca</td>
+					<td>0 kills</td>
+					<td>Killed by Elio Campanile</td>
+                    				</tr><tr class="dead">
+										<td>Francesca Palmieri</td>
+					<td>1 kill</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Francesca Scorziello</td>
+					<td>0 kills</td>
+					<td>Killed by Martina Rossoni</td>
+                    				</tr><tr class="dead">
+										<td>Francesco Folgori</td>
+					<td>0 kills</td>
+					<td>Killed by Michele Spina</td>
+                    				</tr><tr class="dead">
+										<td>Francesco Paletta</td>
+					<td>1 kill</td>
+					<td>Killed by Sara Cerminara</td>
+                    				</tr><tr class="dead">
+										<td>Giacomo Greco</td>
+					<td>0 kills</td>
+					<td>Killed by Andrea Borghesi</td>
+                    				</tr><tr class="dead">
+										<td>Gianluca Ralli</td>
+					<td>0 kills</td>
+					<td>Killed by Francesca Palmieri</td>
+                    				</tr><tr class="dead">
+										<td>Giorgio Conti</td>
+					<td>0 kills</td>
+					<td>Killed by Nicoletta Capotorto</td>
+                    				</tr><tr class="dead">
+										<td>Giovanni Marchetti</td>
+					<td>0 kills</td>
+					<td>Killed by Andrea Colella</td>
+                    				</tr><tr class="dead">
+										<td>Giulia Baldini</td>
+					<td>0 kills</td>
+					<td>Killed by Matteo Di Nitto</td>
+                    				</tr><tr class="dead">
+										<td>Giulia Giu</td>
+					<td>1 kill</td>
+					<td>Killed by Carlo Farneti</td>
+                    				</tr><tr class="dead">
+										<td>Giulio Maria Pezzini</td>
+					<td>0 kills</td>
+					<td>Killed by Daniele Avino</td>
+                    				</tr><tr class="dead">
+										<td>Iacopo Giordano</td>
+					<td>1 kill</td>
+					<td>Killed by Sara Cerminara</td>
+                    				</tr><tr class="dead">
+										<td>Ivano Di Gioia</td>
+					<td>5 kills</td>
+					<td>Killed by Daniele Avino</td>
+                    				</tr><tr class="dead">
+										<td>Ivo Simeoni</td>
+					<td>0 kills</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Laura Iannettone</td>
+					<td>1 kill</td>
+					<td>Killed by Fabio Calabrese</td>
+                    				</tr><tr class="dead">
+										<td>Laura Sophie Del Coiro</td>
+					<td>1 kill</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Lorenzo Danella</td>
+					<td>1 kill</td>
+					<td>Killed by Laura Iannettone</td>
+                    				</tr><tr class="dead">
+										<td>Lorenzo Guarnacci</td>
+					<td>1 kill</td>
+					<td>Killed by Agnese Janigro</td>
+                    				</tr><tr class="dead">
+										<td>Lorenzo Secsi Catena</td>
+					<td>0 kills</td>
+					<td>Killed by Fabio Calabrese</td>
+                    				</tr><tr class="dead">
+										<td>Luca Campagna</td>
+					<td>1 kill</td>
+					<td>Killed by Ivano Di Gioia</td>
+                    				</tr><tr class="dead">
+										<td>Lucia Barba</td>
+					<td>0 kills</td>
+					<td>Killed by Alessandro Rezzesi</td>
+                    				</tr><tr class="dead">
+										<td>Luigi Riccardo Testa</td>
+					<td>0 kills</td>
+					<td>Killed by Matteo Amendola</td>
+                    				</tr><tr class="dead">
+										<td>Marco Martellacci</td>
+					<td>0 kills</td>
+					<td>Killed by Daniele Avino</td>
+                    				</tr><tr class="dead">
+										<td>Maria De Filippo</td>
+					<td>0 kills</td>
+					<td>Killed by Luca Campagna</td>
+                    				</tr><tr class="dead">
+										<td>Maria Michela D</td>
+					<td>0 kills</td>
+					<td>Killed by Nicoletta Capotorto</td>
+                    				</tr><tr class="dead">
+										<td>Martina Rossoni</td>
+					<td>3 kills</td>
+					<td>Killed by Elio Campanile</td>
+                    				</tr><tr class="dead">
+										<td>Massimiliano Bassi</td>
+					<td>0 kills</td>
+					<td>Killed by Carlo Farneti</td>
+                    				</tr><tr class="dead">
+										<td>Matteo Amendola</td>
+					<td>1 kill</td>
+					<td>Killed by ???</td>
+                    				</tr><tr class="dead">
+										<td>Matteo Di Nitto</td>
+					<td>2 kills</td>
+					<td>Killed by Carlo Farneti</td>
+                    				</tr><tr class="dead">
+										<td>Matteo Rai</td>
+					<td>0 kills</td>
+					<td>Killed by Ivano Di Gioia</td>
+                    				</tr><tr class="dead">
+										<td>Michele Clapfer</td>
+					<td>0 kills</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Michele Lentini</td>
+					<td>0 kills</td>
+					<td>Killed by Federica Iacovissi</td>
+                    				</tr><tr class="dead">
+										<td>Michele Spina</td>
+					<td>2 kills</td>
+					<td>Killed by Angelo Zanni</td>
+                    				</tr><tr class="dead">
+										<td>Nicola Stridi</td>
+					<td>0 kills</td>
+					<td>Killed by Iacopo Giordano</td>
+                    				</tr><tr class="dead">
+										<td>Nicole Tomas</td>
+					<td>2 kills</td>
+					<td>Killed by Elio Campanile</td>
+                    				</tr><tr class="dead">
+										<td>Nicoletta Capotorto</td>
+					<td>4 kills</td>
+					<td>Killed by Matteo Di Nitto</td>
+                    				</tr><tr class="dead">
+										<td>Riccardo Romani</td>
+					<td>0 kills</td>
+					<td>Killed by Emanuele De Feo</td>
+                    				</tr><tr class="dead">
+										<td>Roberto Casconi</td>
+					<td>0 kills</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Roberto Fratello</td>
+					<td>0 kills</td>
+					<td>Killed by Alessandro Rezzesi</td>
+                    				</tr><tr class="dead">
+										<td>Robin Short</td>
+					<td>0 kills</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Sara Cerminara</td>
+					<td>2 kills</td>
+					<td>Killed by Agnese Janigro</td>
+                    				</tr><tr class="dead">
+										<td>Serena Boccia</td>
+					<td>0 kills</td>
+					<td>Killed by Lorenzo Guarnacci</td>
+                    				</tr><tr class="dead">
+										<td>Silvia Mennitti</td>
+					<td>0 kills</td>
+					<td>Killed by Dario Fiorenza</td>
+                    				</tr><tr class="dead">
+										<td>Simone Castellan</td>
+					<td>0 kills</td>
+					<td>Killed by Damiano De Prosperis</td>
+                    				</tr><tr class="dead">
+										<td>Simone Guidotti</td>
+					<td>0 kills</td>
+					<td>Killed by Laura Sophie Del Coiro</td>
+                    				</tr><tr class="dead">
+										<td>Stefano Galati</td>
+					<td>0 kills</td>
+					<td>Killed by Daniele Avino</td>
+                    				</tr><tr class="dead">
+										<td>Virginia Listanti</td>
+					<td>0 kills</td>
+					<td>Killed by Claudia Bruni</td>
+                    				</tr><tr class="dead">
+										<td>Walter Grossi</td>
+					<td>0 kills</td>
+					<td>Killed by Nicoletta Capotorto</td>
+                    				</tr>			</table>
+		</div><br />
+	</body>
+</html> 

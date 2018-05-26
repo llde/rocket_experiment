@@ -1,0 +1,70 @@
+ 
+
+<html>
+	<head>
+		<title>Killer Game 2017</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" /> 
+		<link href="/style.css" rel="stylesheet" type="text/css">
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?renew=true" />
+        <link rel="icon" type="image/png" href="/favicon/favicon-32x32.png?renew=true" sizes="32x32" />
+        <link rel="icon" type="image/png" href="/favicon/favicon-16x16.png?renew=true" sizes="16x16" />
+        <link rel="manifest" href="/favicon/manifest.json?renew=true" />
+        <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?renew=true" color="#e00000" />
+        <link rel="shortcut icon" href="/favicon/favicon.ico?renew=true" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-TileImage" content="/favicon/mstile-144x144.png?renew=true" />
+        <meta name="msapplication-config" content="/favicon/browserconfig.xml?renew=true" />
+        <meta name="theme-color" content="#000000" />
+	</head>
+	<body>
+		<script>
+			function login_click()
+			{
+				var username = document.getElementById('username').value;
+				if (username === null) return;
+				var password = document.getElementById('password').value;
+				if (password === null) return;
+				var target = '/killergame';				
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', '/kglogin.php', true);
+				xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				xhr.onload = function () {
+					if(this.readyState == 4 && this.status == 200)
+					{
+						if (this.responseText == 'ok')
+						{
+							window.location.href = target;
+						}
+						else
+						{
+							if (this.responseText.substr(0, 5) == 'error')
+							{
+								alert("Error:\n" + this.responseText.substr(6));
+							}
+							else
+							{
+								alert("Generic error.");
+							}
+						}
+					}
+				};
+				xhr.send('action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
+			}
+			
+			function cancel_click()
+			{
+				var target = '/killergame';				
+				window.location.href = target;
+			}
+		</script>
+		<div id="login_page">
+			Username:<br />
+			<input id="username" type="textbox" class="login_field" tabindex="1"/><br />
+			Password:<br />
+			<input id="password" type="password" class="login_field" tabindex="2"/><br />
+			<br />
+			<button class="login_button" onclick="login_click()" tabindex="3">Log In</button><br /><br />
+			<button class="login_button" onclick="cancel_click()" tabindex="4">Cancel</button><br />
+		</div>
+	</body>
+</html>

@@ -1,0 +1,269 @@
+@font-face
+{
+	font-family: 'OCR A Ext';
+    src: url(/style/OCR.ttf);
+}
+
+@font-face
+{
+	font-family: 'Daedra';
+    src: url(/style/Daedra.otf);
+}
+
+body
+{
+	background-color: #000000;
+	color: #0C0;
+	font-family: 'OCR A Ext', monospace;
+	font-size: 12pt;
+}
+
+button
+{
+	width: 15em;
+	font-size: 1em;
+	background-color: #000;
+	border: solid 2pt #EE0;
+	color: #EE0;
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+	font-family: 'OCR A Ext', monospace;
+	border-radius: 0.2em;
+}
+
+button:hover
+{
+	width: 15em;
+	font-size: 1em;
+	background-color: #EE0;
+	border: solid 2pt #000;
+	color: #000;
+	border-radius: 0.2em;
+}
+
+input.button
+{
+	width: 15em;
+	font-size: 1em;
+	background-color: #000;
+	border: solid 2pt #EE0;
+	color: #EE0;
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+	font-family: 'OCR A Ext', monospace;
+	border-radius: 0.2em;
+}
+
+input.button:hover
+{
+	width: 15em;
+	font-size: 1em;
+	background-color: #EE0;
+	border: solid 2pt #000;
+	color: #000;
+	border-radius: 0.2em;
+}
+
+.sidebutton
+{
+	width: 100%;
+	height: 3em;
+	font-size: 1.2em;
+	background-color: #000;
+	border: solid 2pt #EE0;
+	color: #EE0;
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+	font-family: 'OCR A Ext', monospace;
+	border-radius: 0.2em;
+}
+
+.sidebutton:hover
+{
+	width: 100%;
+	height: 3em;
+	font-size: 1.2em;
+	background-color: #EE0;
+	border: solid 2pt #000;
+	color: #000;
+	border-radius: 0.2em;
+}
+
+.textbox
+{
+	width: 60%;
+	font-size: 1em;
+	background-color: #000;
+	border: solid 2pt #EE0;
+	color: #EE0;
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+	font-family: 'OCR A Ext', monospace;
+	border-radius: 0.2em;
+}
+
+div
+{
+	box-sizing: border-box;
+}
+
+h1
+{ 
+    display: block;
+    font-size: 2.5em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h2
+{ 
+    display: block;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h3
+{ 
+    display: block;
+    font-size: 1.5em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h4
+{ 
+    display: block;
+    font-size: 1.25em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h5
+{ 
+    display: block;
+    font-size: 1em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h6
+{ 
+    display: block;
+    font-size: 0.87em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+.altfont
+{
+	font-family: 'Chiller', sans serif;
+}
+
+/*@media only screen and (max-width: 768px)
+{
+	#head_space
+	{
+		
+	}
+}
+
+@media only screen and (min-width: 769px)
+{*/
+	#head_space
+	{
+		position: absolute;
+		top: 1%;
+		left: 1%;
+		width: 98%;
+		height: 18%;
+		border-top: ridge 4pt #0F0;
+		border-bottom: groove 4pt #0F0;
+		border-left: ridge 4pt #0F0;
+		border-right: groove 4pt #0F0;
+		font-size: 20pt;
+		border-radius: 0.5em;
+	}
+	
+	#side_space
+	{
+		position: absolute;
+		top: 21%;
+		left: 81%;
+		width: 18%;
+		height: 78%;
+		border: solid 2pt #0F0;
+        overflow: hidden;
+	}
+	
+	#main_space
+	{
+		position: absolute;
+		top: 21%;
+		left: 1%;
+		width: 78%;
+		height: 78%;
+		border: solid 2pt #0F0;
+		padding-left: 2em;
+		padding-right: 2em;
+		overflow: auto;
+	}
+	
+	#main_space_error
+	{
+		position: absolute;
+		top: 21%;
+		left: 1%;
+		width: 78%;
+		height: 78%;
+		border: solid 2pt #F00;
+		padding-left: 2em;
+		padding-right: 2em;
+		background-color: #200;
+		color: #F00;
+		overflow: auto;
+	}
+	
+	#login_form
+	{
+		position: relative;
+		left: 20%;
+		width: 60%;
+		height: 50%;
+		font-family: 'OCR A Ext', monospace;
+		background-color: #020;
+		border-top: ridge 2pt #0F0;
+		border-bottom: groove 2pt #0F0;
+		border-left: ridge 2pt #0F0;
+		border-right: groove 2pt #0F0;
+		border-radius: 0.5em;
+		font-size: 16pt;
+	}
+    
+    #ad_space
+    {
+        position: absolute;
+        box-sizing: border-box;
+        width: 100%;
+        bottom: 2%;
+        text-align: center;
+    }
+/*}*/ 

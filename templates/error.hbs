@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<title>Error page</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" /> 
+		<link href="/style.css?v=2" rel="stylesheet" type="text/css" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="theme-color" content="#000000" />
+	</head>
+	<body>
+		<div id="head_space">
+  		<div style="position: relative; float: left; height: 100%;"></div>
+      <div style="position: relative; float: left; height: 100%;">
+	    <div style="position: absolute; top: 50%; transform: translateY(-50%); font-family: 'Daedra'; font-size: 4em;">
+       	&nbsp;&nbsp;&nbsp;&nbsp;Error&nbsp;Page&nbsp;{{error_code}}
+  	  </div>
+    </div>	
+	</div>
+		<div id="main_space">
+			<div>
+	      <h1 style="font-family: 'Daedra';">Error Code {{error_code}}</h1>
+        {{reason}}        
+        <br />
+    	</div>
+    </div>  
+  </body>
+</html>

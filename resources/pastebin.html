@@ -1,0 +1,49 @@
+
+<html>
+	<head>
+		<title>PasteBin Test</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" /> 
+		<link href="/style.css?v=2" rel="stylesheet" type="text/css" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="theme-color" content="#000000" />
+	</head>
+	<body>
+		<script src="/template/common.js"></script>
+		<div id="head_space">
+			<div style="position: relative; float: left; height: 100%;"></div>
+			<div style="position: relative; float: left; height: 100%;">
+				<div style="position: absolute; top: 50%; transform: translateY(-50%); font-family: 'Chiller'; font-size: 4em;">
+					PasteBin
+				</div>
+			</div>	
+		</div>
+		<div id="side_space">
+			<script>
+				function btnHome_click()
+				{
+					common_goTo('/pastebin.html');
+				}	
+				function btnAbout_click()
+				{
+					common_goTo('/about.html');
+				}
+			</script>
+			<script>
+				function btnLogin_click()
+				{
+					common_goTo('/login.html');
+				}
+			</script>
+			<button id="btnHome" class="sidebutton" onclick="btnHome_click();">Home</button>
+			<button id="btnLogin" class="sidebutton" onclick="btnLogin_click();">Log In</button>
+			<button id="btnAbout" class="sidebutton" onclick="btnAbout_click();">Informazioni su...</button>     
+		</div>
+		<div id="main_space">
+			<div>
+				<h1 style="font-family: 'Chiller';">Pastebin Test</h1>
+				<h3 style="font-family: 'Chiller';">Rocket</h3>
+				Pastebin Test
+			</div>
+		</div>
+	</body>
+</html>
