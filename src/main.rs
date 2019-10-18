@@ -1,25 +1,26 @@
-#![feature(plugin, custom_derive)]
-#![plugin(rocket_codegen)]
+#![feature(proc_macro_hygiene, decl_macro)]
 
-extern crate rocket;
-extern crate rocket_codegen;
+#[macro_use] extern crate rocket;
 extern crate rocket_contrib;
 //extern crate diesel; 
 
-//use diesel::prelude::*;
-//use diesel::mysql::MysqlConnection;
-use rocket::response::Failure;
-use rocket::http::Status;
+use rocket::request::Form;
+use rocket::http::{RawStr,Status};
 use rocket::request::Request;
 use rocket::response::content::Html;
 use rocket::response::content::Css;
-use rocket::response::{Responder, Result, NamedFile};
-use rocket_contrib::Template;
+use rocket::response::{Responder, NamedFile};
+use rocket::response::status::Custom;
+use rocket::{Outcome,Data};
+use rocket::Outcome::Failure;
+use rocket::http::Cookies;
+use rocket::http::Cookie;
+
 use std::path::{Path,PathBuf};
 use std::collections::HashMap;
+use std::net::SocketAddr;
 
 
-static db : &'static str = "mysql://root@localhost:3306/hello-rocket";
 macro_rules! error_page_template {
     ($code:expr, $name:expr, $description:expr) => (
         concat!(r#"
@@ -46,91 +47,60 @@ macro_rules! error_page_template {
 
 
 #[get("/teapot")]
-fn teapot() -> Failure{
-    Failure(Status::ImATeapot)
+fn teapot() -> Status{
+    Status::ImATeapot
 }
 
-#[get("/pollina")]
-fn pollina() -> Failure{
-    Failure(Status{code :444, reason : ""})
-}
 
-#[get("/user/<name>")]
-fn index(name : String) -> Html<String> {
-    let name = format!("{} page", name);
-    let body = format!("{}", name);
-    let desc = format!("This is {} personal page", name);
-    Html(format!( "
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset=\"utf-8\">
-                <title>{}</title>
-            </head>
-            <body align=\"center\">
-                <div align=\"center\">
-                    <h1> {} </h1>
-                    <p> {} </p>
-                    <hr />
-                    <small>Rocket</small>
-                </div>
-            </body>
-            </html>
-        ", name,body,desc))
-    
-}
-
-#[derive(FromForm)]
-struct Version{
-    v : u32
-}
 #[get("/style.css?<version>")]
-fn stylev2(version : Version) -> NamedFile{
+fn stylev2(version : u32) -> NamedFile{
     NamedFile::open(Path::new("./resources/style.css")).unwrap()
 }
 
 #[get("/")]
 fn start() -> NamedFile{
-    NamedFile::open(Path::new("./resources/pastebin.html")).unwrap()
+    NamedFile::open(Path::new("./resources/presenze.html")).unwrap()
 }
 
-#[get("/gen_err/<code>")]
-fn gen_err(code : u32) -> Template{
-    let sttt = format!("{}",code);
-    let mut context : HashMap<&str,&str>= HashMap::new();
-    context.insert("error_code", &sttt);
-    context.insert("reason", "TBD");
-    Template::render("error", &context)
+#[derive(FromForm,Debug)]
+struct Email{
+    email : String
+}
+#[derive(FromForm,Debug)]
+struct PostForm{
+    email : String,
+    vcode : String
+}
+impl PostForm{
+    fn set_email(&mut self, email : String) {
+        self.email = email;
+    }
 }
 
+#[post("/confirm", data="<email>")]
+fn confirm(email : Form<Email>, mut cookies : Cookies, addr : SocketAddr) -> NamedFile{
+    println!("{:?}", addr);
+    cookies.add(Cookie::new("email",email.email.clone()));
+    NamedFile::open(Path::new("./resources/confirm.html")).unwrap()
+}
 
+#[post("/submit", data="<data>" )]
+ fn submit(data : Form<PostForm>,  cookies : Cookies){
+    let mut dat = data.into_inner();
+    dat.set_email(cookies.get("email").unwrap().value().to_owned());
+    println!("{:?}",dat);
+ }
+ 
 #[get("/<path..>", rank = 1)]
-fn general(path : PathBuf) -> std::io::Result<NamedFile>{
-    NamedFile::open(Path::new("./resources/").join(path))
+fn general(path : PathBuf) -> Result<NamedFile, Status>{
+    let named = NamedFile::open(Path::new("./resources/").join(path));
+    match named{
+        Ok(nam) => Ok(nam),
+        Err(_) => Err(Status::NotFound)
+    }
 }
 
-#[get("/satan")]
-fn satan() -> Failure{
-    Failure(Status{code : 599, reason : "Satan was here"})
-}
-
-#[get("/god")]
-fn god() -> Html<&'static str>{
-    Html("<!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset=\"utf-8\">
-                <title>Streaming video</title>
-            </head>
-            <body align=\"center\">
-                <div align=\"center\">
-					 <video src=Mon.webm>
-                </div>
-            </body>
-            </html>")
-}
-
-#[error(418)]
+#[catch(418)]
 fn teap(req : &Request) -> Html<&'static str>{
     Html("<!DOCTYPE html>
             <html>
@@ -139,28 +109,26 @@ fn teap(req : &Request) -> Html<&'static str>{
                 <title>I'm A Teapot</title>
             </head>
             <body align=\"center\">
-                <div align=\"center\">
+                <div align=\"center\">s
 					 <img src=\"teapot.jpg\" alt=Teapot>
                 </div>
             </body>
             </html>")
 }
+#[catch(500)]
+fn saat(re : &Request) -> String{
+    format!("Blocked attempt to summoning the devil at {}", re.uri())
+} 
 
-#[error(599)]
-fn satanism(req : &Request) -> Html<&'static str>{
-    Html(error_page_template!(666, "Blasphemy", "Satan was here"))
-}
 
-
-#[error(444)]
-fn pol(req : &Request) -> Html<&'static str>{
-    Html(error_page_template!(444, "Pollina", "Iddio Pollina!"))
+#[get("/satan")]
+fn satan() -> Custom<&'static str>{
+    Custom(Status::new(666, "Hail Satan!"), "Porcoddio!")
 }
 
 fn main() {
   //  let conn = MysqlConnection::establish(db)
     //    .expect(&format!("Error connecting to {}", db));
-    rocket::ignite().catch(errors![pol,teap,satanism])
-        .mount("/", routes![index,teapot, stylev2,pollina,gen_err,start, general,satan,god]).attach(Template::fairing())
-        .launch();
+    rocket::ignite().register(catchers![teap])
+        .mount("/", routes![teapot, stylev2,start,general,confirm,submit,satan]).launch();
 }
