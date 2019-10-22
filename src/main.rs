@@ -9,7 +9,7 @@ use rocket::http::{RawStr,Status};
 use rocket::request::Request;
 use rocket::response::content::Html;
 use rocket::response::content::Css;
-use rocket::response::{Responder, NamedFile};
+use rocket::response::{Responder, NamedFile,Redirect};
 use rocket::response::status::Custom;
 use rocket::{Outcome,Data};
 use rocket::Outcome::Failure;
@@ -66,6 +66,7 @@ fn start() -> NamedFile{
 struct Email{
     email : String
 }
+
 #[derive(FromForm,Debug)]
 struct PostForm{
     email : String,
@@ -85,11 +86,12 @@ fn confirm(email : Form<Email>, mut cookies : Cookies, addr : SocketAddr) -> Nam
 }
 
 #[post("/submit", data="<data>" )]
- fn submit(data : Form<PostForm>,  cookies : Cookies){
+fn submit(data : Form<PostForm>,  cookies : Cookies) ->Redirect {
     let mut dat = data.into_inner();
     dat.set_email(cookies.get("email").unwrap().value().to_owned());
     println!("{:?}",dat);
- }
+    Redirect::to(uri!(register_result))
+}
  
 #[get("/<path..>", rank = 1)]
 fn general(path : PathBuf) -> Result<NamedFile, Status>{
@@ -99,6 +101,23 @@ fn general(path : PathBuf) -> Result<NamedFile, Status>{
         Err(_) => Err(Status::NotFound)
     }
 }
+
+#[get("/result")]
+fn register_result(mut cookies : Cookies) -> NamedFile{
+    let cook = cookies.get("email");
+    match cook {
+        None => {
+            println!("Failed, cookie for email not found for this connection");
+            NamedFile::open(Path::new("./resources/failure.html")).unwrap()
+        },
+        Some(cooki) =>{
+            println!("Success for email: {}", cooki.value());
+            cookies.remove(Cookie::named("email"));
+            NamedFile::open(Path::new("./resources/success.html")).unwrap()
+        }
+    }
+} 
+
 
 #[catch(418)]
 fn teap(req : &Request) -> Html<&'static str>{
@@ -115,9 +134,10 @@ fn teap(req : &Request) -> Html<&'static str>{
             </body>
             </html>")
 }
+
 #[catch(500)]
 fn saat(re : &Request) -> String{
-    format!("Blocked attempt to summoning the devil at {}", re.uri())
+    format!("Blocked attempt to summoning nasal daemons at {}", re.uri())
 } 
 
 
@@ -130,5 +150,5 @@ fn main() {
   //  let conn = MysqlConnection::establish(db)
     //    .expect(&format!("Error connecting to {}", db));
     rocket::ignite().register(catchers![teap])
-        .mount("/", routes![teapot, stylev2,start,general,confirm,submit,satan]).launch();
+        .mount("/", routes![teapot, stylev2,start,general,confirm,submit,satan, register_result]).launch();
 }
