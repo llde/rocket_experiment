@@ -20,6 +20,9 @@ use std::path::{Path,PathBuf};
 use std::collections::HashMap;
 use std::net::SocketAddr;
 
+use auth::*;
+
+pub mod auth;
 
 macro_rules! error_page_template {
     ($code:expr, $name:expr, $description:expr) => (
@@ -92,13 +95,19 @@ fn submit(data : Form<PostForm>,  cookies : Cookies) ->Redirect {
     println!("{:?}",dat);
     Redirect::to(uri!(register_result))
 }
- 
+
+#[get("/notfound")]
+fn ntf() -> Status{
+    Status::NotFound
+}
+
+
 #[get("/<path..>", rank = 1)]
 fn general(path : PathBuf) -> Result<NamedFile, Status>{
     let named = NamedFile::open(Path::new("./resources/").join(path));
     match named{
         Ok(nam) => Ok(nam),
-        Err(_) => Err(Status::NotFound)
+        Err(_) => Err(Status::Gone)
     }
 }
 
@@ -150,5 +159,5 @@ fn main() {
   //  let conn = MysqlConnection::establish(db)
     //    .expect(&format!("Error connecting to {}", db));
     rocket::ignite().register(catchers![teap])
-        .mount("/", routes![teapot, stylev2,start,general,confirm,submit,satan, register_result]).launch();
+        .mount("/", routes![teapot, stylev2,start,general,confirm,submit,satan, register_result, ntf]).launch();
 }
