@@ -1,4 +1,4 @@
-#![feature(proc_macro_hygiene, decl_macro)]
+#![feature(proc_macro_hygiene, decl_macro, vec_remove_item)]
 
 #[macro_use] extern crate rocket;
 extern crate rocket_contrib;
