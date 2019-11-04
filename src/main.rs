@@ -4,24 +4,21 @@
 extern crate rocket_contrib;
 //extern crate diesel; 
 
-use rocket::request::Form;
 use rocket::http::{RawStr,Status};
-use rocket::request::Request;
-use rocket::response::content::Html;
-use rocket::response::content::Css;
+use rocket::request::{Request, Form, State};
+use rocket::response::content::{Html, Css};
 use rocket::response::{Responder, NamedFile,Redirect};
 use rocket::response::status::Custom;
 use rocket::{Outcome,Data};
 use rocket::Outcome::Failure;
-use rocket::http::Cookies;
-use rocket::http::Cookie;
+use rocket::http::{Cookies , Cookie};
 
 use std::path::{Path,PathBuf};
 use std::collections::HashMap;
 use std::net::SocketAddr;
 
 use auth::*;
-
+use auth::{Token, Session, SessionsHolder};
 pub mod auth;
 
 macro_rules! error_page_template {
@@ -82,18 +79,41 @@ impl PostForm{
 }
 
 #[post("/confirm", data="<email>")]
-fn confirm(email : Form<Email>, mut cookies : Cookies, addr : SocketAddr) -> NamedFile{
+fn confirm(email : Form<Email>, mut cookies : Cookies, addr : SocketAddr, holder: State<SessionsHolder>) -> NamedFile{
     println!("{:?}", addr);
-    cookies.add(Cookie::new("email",email.email.clone()));
+    println!("{:?}", email);
+    let guest = holder.auth_guest_session(email.email.clone());
+    //TODO is possible to register the token for the custom guard without using directly the cookies
+    cookies.add(Cookie::new("auth_token", guest.get_token().get_value()));
     NamedFile::open(Path::new("./resources/confirm.html")).unwrap()
 }
 
+
+fn register_result(session : Session, form : PostForm, holder : State<SessionsHolder>) -> NamedFile{
+    
+//  NamedFile::open(Path::new("./resources/failure.html")).unwrap()
+    holder.deauth_session(session);
+    NamedFile::open(Path::new("./resources/success.html")).unwrap()
+    
+    //TODO proper registration and controls
+      
+}
+ 
+
+
 #[post("/submit", data="<data>" )]
-fn submit(data : Form<PostForm>,  cookies : Cookies) ->Redirect {
+fn submit(data : Form<PostForm>,  sess_token : Token, holder : State<SessionsHolder>, mut cookies : Cookies) ->Result<NamedFile,Status> {
     let mut dat = data.into_inner();
-    dat.set_email(cookies.get("email").unwrap().value().to_owned());
-    println!("{:?}",dat);
-    Redirect::to(uri!(register_result))
+    println!("{:?}", sess_token);
+    let res =  match holder.get_by_token(sess_token){
+        None => Err(Status::Forbidden),
+        Some(sessi) =>{
+            println!("{:?}",dat);
+            Ok(register_result(sessi, dat, holder))
+        }
+    };
+    cookies.remove(Cookie::named("auth_token"));
+    res
 }
 
 #[get("/notfound")]
@@ -111,21 +131,6 @@ fn general(path : PathBuf) -> Result<NamedFile, Status>{
     }
 }
 
-#[get("/result")]
-fn register_result(mut cookies : Cookies) -> NamedFile{
-    let cook = cookies.get("email");
-    match cook {
-        None => {
-            println!("Failed, cookie for email not found for this connection");
-            NamedFile::open(Path::new("./resources/failure.html")).unwrap()
-        },
-        Some(cooki) =>{
-            println!("Success for email: {}", cooki.value());
-            cookies.remove(Cookie::named("email"));
-            NamedFile::open(Path::new("./resources/success.html")).unwrap()
-        }
-    }
-} 
 
 
 #[catch(418)]
@@ -158,6 +163,7 @@ fn satan() -> Custom<&'static str>{
 fn main() {
   //  let conn = MysqlConnection::establish(db)
     //    .expect(&format!("Error connecting to {}", db));
-    rocket::ignite().register(catchers![teap])
-        .mount("/", routes![teapot, stylev2,start,general,confirm,submit,satan, register_result, ntf]).launch();
+    let mut sessions_holder = SessionsHolder::new(false);
+    rocket::ignite().manage(sessions_holder).register(catchers![teap])
+        .mount("/", routes![teapot, stylev2,start,general,confirm,submit,satan, ntf]).launch();
 }

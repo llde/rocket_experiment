@@ -23,10 +23,15 @@ pub enum TokenError{
     NotExist
 }
 
-#[derive(Clone,PartialEq,Eq)]
-struct Token{
+#[derive(Clone,PartialEq,Eq, Debug)]
+pub struct Token{
     t : String
 }
+
+impl Token{
+    pub fn get_value(&self) -> String{ self.t.clone()}
+}
+
 
 impl<'a, 'r> FromRequest<'a, 'r> for Token {
     type Error = TokenError;
@@ -43,7 +48,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for Token {
 }
 
 #[derive(Clone,PartialEq,Eq)]
-struct Session{
+pub struct Session{
     username : String,
     role : Role,
     token : Token,
@@ -59,6 +64,7 @@ impl Session{
         let mut hasher = DefaultHasher::new();
         user.hash(&mut hasher);
         let token = Token{t : hasher.finish().to_string() };
+        println!("{:?}", token);
         //TODO render token actually more robust using JWT
         Session{username : user, role : role, token : token , time_to_live : 120 *  60 }
     }
@@ -68,11 +74,13 @@ impl Session{
     pub fn renew_session(&mut self, token : String){unimplemented!()}
     
     pub fn get_token(&self) -> Token{self.token.clone()}
+    
+    pub fn get_user(&self) -> String {self.username.clone()}
 
 }
 
 
-struct SessionsHolder{
+pub struct SessionsHolder{
     sessions_counter : AtomicU32,
     sessions : Arc<Mutex<Vec<Session>>>,
     collector : Option<Thread>,
@@ -80,7 +88,7 @@ struct SessionsHolder{
 
 }
 
-
+//TODO transactional holder?
 impl SessionsHolder{
     pub fn new(collect_garbage_sessions : bool) -> SessionsHolder{
         if collect_garbage_sessions == true {unimplemented!()}
@@ -91,20 +99,30 @@ impl SessionsHolder{
     
     pub fn autenthicate_user(user : String, hpassw : String){unimplemented!()}
     
-    pub fn auth_guest_session(&mut self, user : String) -> Session{
+    pub fn auth_guest_session(&self, user : String) -> Session{
         let session = Session::create_session(user, Role::Guest);
         (*self.sessions.lock().unwrap()).push(session.clone());
         self.sessions_counter.fetch_add(1, Ordering::SeqCst);
         session
     }
     
-    pub fn deauth_session(&mut self, session : Session) -> Option<Session>{
+    pub fn deauth_session(&self, session : Session) -> Option<Session>{
         self.sessions_counter.fetch_sub(1, Ordering::SeqCst);
         (*self.sessions.lock().unwrap()).remove_item(&session)
         //TODO result and vocal error if not present
     }
     
-    pub fn get_by_token(&mut self, token : String) -> Option<Session>{unimplemented!()}
+    pub fn get_by_token(&self, token : Token) -> Option<Session>{  
+        let guard = self.sessions.lock().unwrap();
+        let mut session = None;
+        for ses in guard.iter(){
+            if ses.token == token{
+                session = Some(ses.clone());
+                break;
+            }
+        }
+        session
+    }
     
     pub fn drop_all_sessions(&mut self){unimplemented!()}
     
