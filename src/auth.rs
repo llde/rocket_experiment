@@ -46,7 +46,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for Token {
         
     }
 }
-
+//TODO use Session as Custom Guard. Session trait maybe?
 #[derive(Clone,PartialEq,Eq)]
 pub struct Session{
     username : String,
