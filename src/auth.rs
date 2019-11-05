@@ -37,8 +37,8 @@ impl<'a, 'r> FromRequest<'a, 'r> for Token {
     type Error = TokenError;
 
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, Self::Error> {
-        let cookies = request.cookies();
-        let tok_res = cookies.get("auth_token");
+        let mut cookies = request.cookies();
+        let tok_res = cookies.get_private("auth_token");
         match tok_res {
             Some(token) => Outcome::Success(Token{t : token.value().to_string()}),
             None => Outcome::Failure((Status::Forbidden, TokenError::NotExist))

@@ -84,7 +84,7 @@ fn confirm(email : Form<Email>, mut cookies : Cookies, addr : SocketAddr, holder
     println!("{:?}", email);
     let guest = holder.auth_guest_session(email.email.clone());
     //TODO is possible to register the token for the custom guard without using directly the cookies
-    cookies.add(Cookie::new("auth_token", guest.get_token().get_value()));
+    cookies.add_private(Cookie::new("auth_token", guest.get_token().get_value()));
     NamedFile::open(Path::new("./resources/confirm.html")).unwrap()
 }
 
@@ -112,7 +112,7 @@ fn submit(data : Form<PostForm>,  sess_token : Token, holder : State<SessionsHol
             Ok(register_result(sessi, dat, holder))
         }
     };
-    cookies.remove(Cookie::named("auth_token"));
+    cookies.remove_private(Cookie::named("auth_token"));
     res
 }
 
